@@ -5,15 +5,19 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         {% for product in collection.products %}
           {% if product.featured_image %}
-            <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.featured_image.alt }}" >
+            
+            <div>
+              <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.featured_image.alt }}" >
+            
+           <span>{{ product.vendor }}</span>  
+            
+           <a href="{{ product.url }}">{{ product.title }}</a>
+            
+            <p>{{ product.price | money }}</p> 
+            </div>
+            
           {% endif %}
-      
-          <span>{{ product.vendor }}</span>
-      
-          <a href="{{ product.url }}">{{ product.title }}</a>
-      
-          <p>{{ product.price | money }}</p>
-          <p>testtest</p>
+          
         {% else %}
           <p>There are no products inside of this collection</p>
         {% endfor %}

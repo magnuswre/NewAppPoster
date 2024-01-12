@@ -107,6 +107,9 @@
         </div>
       </div>
       <div>
+        {% comment %} <button type="button" class="whitespace-nowrap text-base text-gray-500 hover:text-gray-900">
+          {% render 'icon-search' %}
+        </button> {% endcomment %}
         <a class="text-gray-300" href="{{ routes.cart_url }}">
           {% render 'icon-shopping-bag' %}
         </a>
@@ -181,7 +184,7 @@
 </nav>
 
 
-<script>
+{% comment %} <script>
     // Function to check if an element is a child of another element
     function isDescendant(parent, child) {
         var node = child.parentNode;
@@ -213,7 +216,7 @@
 
     // Close the dropdown when clicking outside of it
     document.addEventListener('click', closeDropdownOnClickOutside);
-</script>
+</script> {% endcomment %}
 
 
 {% schema %}

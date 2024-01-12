@@ -254,89 +254,34 @@
                 </style> */
               {% endcomment %}
 
-              {% comment %}
-                <style>
-                  .radio input[type='radio'] {
-                    display: none;
-                    /*removes original button*/
-                  }
-
-                  .radio label:before {
-                    /*styles outer circle*/
-                    content: ' ';
-                    display: inline-block;
-                    position: relative;
-                    top: 5px;
-                    margin: 0 5px 0 0;
-                    width: 112px;
-                    height: 42px;
-                    /* border-radius: 11px; */
-                    border: 1px solid;
-                    background-color: #ceedd8;
-                  }
-
-                  .radio label {
-                    position: relative;
-                  }
-
-                  .radio label input[type='radio']:checked + span {
-                    /*styles inside circle*/
-                    border-radius: 11px;
-                    width: 12px;
-                    height: 12px;
-                    position: absolute;
-                    top: 1px;
-                    left: 6px;
-                    display: block;
-                    background-color: blue;
-                    /* display: none; */
-                    cursor: pointer;
-                  }
-                </style>
-              {% endcomment %}
               <style>
                 input[type='radio'] {
-                  display: none;
-                }
-
-                /* .active-label {
-                 border: 1px solid
-                } */
-
-                .variant-selector-label {
-                  background-color: #ceedd8;
-                }
-
-                .variant-selector-label.selected {
-                  border: 1px solid black
+                   background-color: red; 
                 }
               </style>
-
               <variant-selector data-url="{{ product.url }}" data-section="{{ section.id }}">
                 {% for option in product.options_with_values %}
-                  <div>
+                  <div id="faq">
                     <ul>
-                      <li class="w-5/6">
+                      <li>
                         <input type="checkbox" checked name="options[{{ option.name | escape }}]">
                         <h2 for="Option-{{ section.id }}-{{ forloop.index0 }}">{{ option.name }}</h2>
-                        <div class="flex items-center gap-3 h-10">
-                          {% for value in option.values %}
-                            <div class="custom-variants-option border w-19 flex text-center  ">
-                              <label class="variant-selector-label py-1 px-1">
-                                <input
-                                  class="variant-selector-class"
-                                  type="radio"
-                                  name="options[{{ option.name | escape }}]"
-                                  value="{{ value | escape }}"
-                                  {% if option.selected_value == value %}
-                                    checked
-                                  {% endif %}
-                                >
-                                {{ value }}
-                              </label>
+                        {% for value in option.values %}
+                          <div class="custom-variants-option variant-selector-class border">
+                            <input
+                              type="radio"
+                              name="options[{{ option.name | escape }}]"
+                              id="Option-{{ section.id }}-{{ forloop.index0 }}"
+                              value="{{ value | escape }}"
+                              {% if option.selected_value == value %}
+                                checked
+                              {% endif %}
+                            >
+                            {% comment %} <span for="Option-{{ section.id }}-{{ forloop.index0 }}"> {{ value }} </span> {% endcomment %}
+                            <span class="border">{{ value }}</span>
                             </div>
-                          {% endfor %}
-                        </div>
+
+                        {% endfor %}
                       </li>
                     </ul>
                   </div>
@@ -392,42 +337,16 @@
 </div>
 
 <script>
- 
- class VariantSelector extends HTMLElement {
-  constructor() {
-    super();
-    this.setInitialSelectedOptions();
-    const radioButtons = this.querySelectorAll('.variant-selector-class');
-    radioButtons.forEach((radioButton) => {
-      radioButton.addEventListener('click', this.onVariantChange.bind(this));
-    });
-  }
+  class VariantSelector extends HTMLElement {
+    constructor() {
+      super();
+      const radioButtons = this.querySelectorAll('.variant-selector-class');
+      radioButtons.forEach((radioButton) => {
+        radioButton.addEventListener('click', this.onVariantChange.bind(this));
+      });
+    }
 
-  setInitialSelectedOptions() {
-    const selectedOptions = this.querySelectorAll('input[type="radio"]:checked');
-    selectedOptions.forEach((selectedOption) => {
-      const label = selectedOption.closest('.variant-selector-label');
-      if (label) {
-        label.classList.add('selected');
-      }
-    });
-  }
-    onVariantChange(event) {
-        // Get the clicked option and its category
-  const clickedOption = event.target.closest('.variant-selector-label');
-  const category = clickedOption.closest('ul');
-
-  // Remove the 'selected' class from the previously selected option in the same category
-  const previouslySelectedOption = category.querySelector('.variant-selector-label.selected');
-  if (previouslySelectedOption) {
-    previouslySelectedOption.classList.remove('selected');
-  }
-
-  // Add the 'selected' class to the clicked option
-  if (clickedOption) {
-    clickedOption.classList.add('selected');
-  }
-
+    onVariantChange() {
       console.log('onVariantChange');
       this.getSelectedOptions();
       this.getSelectedVariant();
@@ -547,3 +466,35 @@
   ]
 }
 {% endschema %}
+
+{% comment %}
+  {% assign current_variant = product.selected_or_first_available_variant %}
+  {% assign featured_image = current_variant.featured_image | default: product.featured_image %}
+  <img src="{{ featured_image | img_url: 'large' }}" alt="{{ featured_image.alt | escape }}" id="ProductPhotoImg">
+  {% for image in product.images %}
+    <a href="{{ image.src | img_url: 'large' }}">
+      <img src="{{ image.src | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
+    </a>
+  {% endfor %}
+  <h1>{{ product.title }}</h1>
+  <form action="/cart/add" method="post" enctype="multipart/form-data" id="AddToCartForm">
+    <select name="id" id="productSelect">
+      {% for variant in product.variants %}
+        {% if variant.available %}
+          <option value="{{ variant.id }}">
+            {{ variant.title }} - {{ variant.price | money_with_currency }}
+          </option>
+        {% else %}
+          <option disabled="disabled">
+            {{ variant.title }} - sold out
+          </option>
+        {% endif %}
+      {% endfor %}
+    </select>
+    {{ current_variant.price | money }}
+    <label for="Quantity">quantity</label>
+    <input type="number" id="Quantity" name="quantity" value="1" min="1">
+    <button type="submit" name="add" id="AddToCart">Add to cart</button>
+  </form>
+  <div>{{ product.description }}</div>
+{% endcomment %}

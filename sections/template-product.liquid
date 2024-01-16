@@ -2,13 +2,13 @@
 
 <div class="max-w-3xl mx-auto my-10 border ">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-    <div class="product-medias">
-      <div>
-        <div class="carousel h-94" data-current-slide="0" data-total-slides="{{ product.media.size }}">
+
+  {% comment %} PRODUCT IMAGE {% endcomment %}
+    <div class="product-medias ">
+        <div class="carousel flex flex-col" data-current-slide="0" data-total-slides="{{ product.media.size }}">
             {% for media in product.media %}
               <div class="carousel-slide" style="display: none;" data-id="{{ media.id }}" data-color="{{ media.alt }}">
-                <div class="h-80 overflow-hidden p-5 relative">
-                  {% comment %} {% render 'product-media', media: media %} {% endcomment %}
+                <div class="h-80 overflow-hidden relative ">
                    <img
                    class="w-full h-full object-cover customMediaAlt" 
                    data-option-value="{{ media.alt }}"
@@ -27,10 +27,12 @@
                 </div>
               </div>
             {% endfor %}
-          <button class="carousel-prev">Prev</button>
-          <button class="carousel-next">Next</button>
+            <div class="flex items-center justify-between mt-4">
+              <button class="carousel-prev">{% render 'icon-chevron-left' %}</button>
+            <button class="carousel-next">{% render 'icon-chevron-right' %}</button>
+            </div>
+            
         </div>
-      </div>
     </div>
     <div class="product--information sticky top-5 p-2 ">
       {% form 'product', product, id: 'product-form', novalidate: 'novalidate' %}
@@ -161,15 +163,12 @@
                 </button>
               </div>
             {% else %}
-
           {% endcase %}
         {% endfor %}
       {% endform %}
     </div>
   </div>
 </div>
-
-
 <script>
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -203,14 +202,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.querySelectorAll('.variant-selector-label').forEach((label) => {
   label.addEventListener('click', function(event) {
-    if (event.target.name === 'options[Color]') {
+    if (event.target.name === 'options[Färg]') {
       console.log('event.target.value:' + event.target.value);
 
       // Find the index of the slide with the matching alt attribute
       const matchingSlideIndex = altTexts.indexOf(event.target.value);
       if (matchingSlideIndex !== -1) {
         currentSlide = matchingSlideIndex;
-        console.log('you clicked on a label with matching color');
+        console.log('you clicked on a label with matching färg');
       }
 
       updateSlides();
@@ -230,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('nextButton');
   });
 
-  updateSlides(); // Log the alt text when the page is loaded initially
+  updateSlides();
 });
 
 

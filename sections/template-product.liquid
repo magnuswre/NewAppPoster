@@ -91,21 +91,113 @@
                   display: none;
                 }
 
-                .createdInputTextDropdownContent{
+                /* .createdInputTextDropdownContent{
                   display: none;
-                }
+                } */
 
                 .fontChangeDropdownContent{
                   display: none;
                 }
 
-               
+              
 
              
               </style>
 
               <variant-selector data-url="{{ product.url }}" data-section="{{ section.id }}">
-                {% for option in product.options_with_values %}
+                <div>
+                  <ul>
+                    <li class="w-full flex flex-col">
+                      <h2 class="createText bg-gray-200 text-center mb-5 h-10 flex items-center justify-center">Välj text</h2>
+                      <div class="createdInputTextDropdownContent flex items-center justify-center gap-3 h-10 mb-7 ">
+                          <div class="custom-variants-option border w-19 flex text-center">
+                            <label class="variant-selector-label py-1 px-1" for="displayPetNameTwo">
+                              <input
+                                id="displayPetNameTwo"
+                                type="radio"
+                                name="displayPetNameTwo"
+                              >
+                              <input 
+                                class="border w-full text-center" 
+                                id="displayPetName" type="text" 
+                                placeholder= "ex. Pluto"
+                                required
+                                >
+                            </label>
+                          </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <ul>
+                    <li class="w-full flex flex-col">
+                      <div class="petnamePhoneNumber  bg-gray-200 grid grid-cols-3 mb-5 h-10 items-center text-center ">
+                      <div class=""></div>
+                      <h2 class="">Nummer*</h2>
+                      <p class="text-xs mr-2"> * Visas på baksidan</p>
+                      </div>
+                      <div class="petnamePhoneNumberDropdownContent flex items-center justify-center gap-3 h-10 mb-7 ">
+                          <div class="custom-variants-option border w-19 flex text-center">
+                            <label id="variant-selector-label-phonenumber"
+                                class="variant-selector-label py-1 px-1" for="displayPetNameTwo">
+                              <input
+                                id="petnamePhoneNumber"
+                                type="radio"
+                                name="petnamePhoneNumber"
+                              >
+                              <input 
+                                class="border w-full text-center" 
+                                id="displayPetName" type="number" 
+                                placeholder="ex. 0701234567"
+                                required
+                                >
+                            </label>
+                          </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+
+
+                <div>
+                  <ul>
+                    <li class="w-full flex flex-col">
+                      <div class="fontChange bg-gray-200 grid grid-cols-3 mb-5 h-10 items-center">
+                        <div></div>
+                        <h2 class="text-center">Typsnitt</h2>
+                        <div class="flex justify-end items-center">
+                        <span class="chevron text-gray-400 mr-2">{% render 'icon-chevron-input' %}</span>
+                      </div>
+                      </div>
+                      <div class="fontChangeDropdownContent flex items-center gap-3 h-10 mb-7">
+                        {% assign fontChoices = "Arial, Times" | split: ',' %}
+                        {% for font in fontChoices %}
+                          <div class="custom-variants-option border w-19 flex text-center">
+                            <label class="variant-selector-label py-1 px-1" for="fontChoice{{ forloop.index }}">
+                              <input
+                                id="fontChoice{{ forloop.index }}"
+                                class="font-choice "
+                                type="radio"
+                                name="Typsnitt"
+                                value="{{ font | strip | handle }}"
+                              >
+                              {{ font }}
+                            </label>
+                          </div>
+                        {% endfor %}
+                      </div>
+                    </li>
+                  </ul>
+                </div>  
+              
+              
+              {% for option in product.options_with_values %}
+                  
+  
+
+
                   <div>
                     <ul>
                       <li class="w-full flex flex-col">
@@ -150,55 +242,7 @@
 
                 {% comment %}  {% endcomment %}
 
-                <div>
-                  <ul>
-                    <li class="w-full flex flex-col">
-                      <h2 class="createText bg-gray-200 text-center mb-5 h-10 flex items-center justify-center">Välj text</h2>
-                      <div class="createdInputTextDropdownContent flex items-center justify-center gap-3 h-10 mb-7 ">
-                          <div class="custom-variants-option border w-19 flex text-center">
-                            <label class="variant-selector-label py-1 px-1" for="displayPetNameTwo">
-                              <input
-                                id="displayPetNameTwo"
-                                type="radio"
-                                name="displayPetNameTwo"
-                              >
-                              <input 
-                                class="border w-full text-center" 
-                                id="displayPetName" type="text" 
-                                placeholder="Namn"
-                                required
-                                >
-                            </label>
-                          </div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-
-                <div>
-                  <ul>
-                    <li class="w-full flex flex-col">
-                      <h2 class="fontChange bg-gray-200 text-center mb-5 h-10 flex items-center justify-center">Typsnitt</h2>
-                      <div class="fontChangeDropdownContent flex items-center gap-3 h-10 mb-7">
-                        {% assign fontChoices = "Arial, Times" | split: ',' %}
-                        {% for font in fontChoices %}
-                          <div class="custom-variants-option border w-19 flex text-center">
-                            <label class="variant-selector-label py-1 px-1" for="fontChoice{{ forloop.index }}">
-                              <input
-                                id="fontChoice{{ forloop.index }}"
-                                class="font-choice "
-                                type="radio"
-                                name="Typsnitt"
-                                value="{{ font | strip | handle }}"
-                              >
-                              {{ font }}
-                            </label>
-                          </div>
-                        {% endfor %}
-                      </div>
-                    </li>
-                  </ul>
-                </div>
+                
                 
                 {% comment %}  {% endcomment %}
               </variant-selector>
@@ -437,19 +481,21 @@
         });
     }
   }
- 
-  const createdInputText = document.querySelector('.createText');
-  const createdInputTextDropdownContent = document.querySelector('.createdInputTextDropdownContent');
+// //  Används ej
+//   const createdInputText = document.querySelector('.createText');
+//   const createdInputTextDropdownContent = document.querySelector('.createdInputTextDropdownContent');
 
-  createdInputText.addEventListener('click', () => {
-  createdInputTextDropdownContent.classList.toggle('createdInputTextDropdownContent');
-});
+//   createdInputText.addEventListener('click', () => {
+//   createdInputTextDropdownContent.classList.toggle('createdInputTextDropdownContent');
+// });
 
-  const fontChange = document.querySelector('.fontChange');
-  const fontChangeDropdownContent = document.querySelector('.fontChangeDropdownContent');
+const fontChange = document.querySelector('.fontChange');
+const fontChangeDropdownContent = document.querySelector('.fontChangeDropdownContent');
+const chevron = fontChange.querySelector('.chevron');
 
-  fontChange.addEventListener('click', () => {
-    fontChangeDropdownContent.classList.toggle('fontChangeDropdownContent');
+fontChange.addEventListener('click', () => {
+  chevron.classList.toggle('rotate-90');
+  fontChangeDropdownContent.classList.toggle('fontChangeDropdownContent');
 });
 
 

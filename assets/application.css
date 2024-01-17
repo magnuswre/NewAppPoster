@@ -609,6 +609,10 @@ video {
   z-index: 10;
 }
 
+.m-3 {
+  margin: 0.75rem;
+}
+
 .mx-1 {
   margin-left: 0.25rem;
   margin-right: 0.25rem;
@@ -850,6 +854,10 @@ video {
 
 .max-w-md {
   max-width: 28rem;
+}
+
+.max-w-5xl {
+  max-width: 64rem;
 }
 
 .flex-1 {
@@ -1454,6 +1462,10 @@ video {
     inset: auto;
   }
 
+  .sm\:m-3 {
+    margin: 0.75rem;
+  }
+
   .sm\:ml-6 {
     margin-left: 1.5rem;
   }
@@ -1490,6 +1502,14 @@ video {
 }
 
 @media (min-width: 768px) {
+  .md\:m-0 {
+    margin: 0px;
+  }
+
+  .md\:m-3 {
+    margin: 0.75rem;
+  }
+
   .md\:mx-auto {
     margin-left: auto;
     margin-right: auto;

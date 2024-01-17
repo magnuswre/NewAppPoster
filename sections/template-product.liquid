@@ -6,15 +6,15 @@
     font-family: Arial,'Times New Roman';
   }
   .rotate-90 {
-                 transform: rotate(90deg);
-               }
+    transform: rotate(90deg);
+  }
   /* More existing styles */
 </style> 
 
 {% assign selected_variant = product.selected_or_first_available_variant %}
 
-<div class="max-w-3xl mx-auto my-10">
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+<div class="max-w-5xl mx-auto my-10">
+  <div class="m-3 md:m-3 grid grid-cols-1 md:grid-cols-3 gap-3">
     {% comment %} PRODUCT IMAGE {% endcomment %}
     <div class="product-medias my-2 ">
       <div class="carousel flex flex-col" data-current-slide="0" data-total-slides="{{ product.media.size }}">
@@ -49,7 +49,7 @@
         </div>
       </div>
     </div>
-    <div class="product--information sticky top-5 p-2 ">
+    <div class="product--information top-5 p-2 ">
       {% form 'product', product, id: 'product-form', novalidate: 'novalidate' %}
         <input type="hidden" name="id" value="{{ selected_variant.id }}">
 
@@ -90,6 +90,16 @@
                 .magnusYolo {
                   display: none;
                 }
+
+                .createdInputTextDropdownContent{
+                  display: none;
+                }
+
+                .fontChangeDropdownContent{
+                  display: none;
+                }
+
+               
 
              
               </style>
@@ -143,8 +153,8 @@
                 <div>
                   <ul>
                     <li class="w-full flex flex-col">
-                      <h2 class="henrikYolo bg-gray-200 text-center mb-5 h-10 flex items-center justify-center">Välj text</h2>
-                      <div class="flex items-center justify-center gap-3 h-10 mb-7 magnusYolo">
+                      <h2 class="createText bg-gray-200 text-center mb-5 h-10 flex items-center justify-center">Välj text</h2>
+                      <div class="createdInputTextDropdownContent flex items-center justify-center gap-3 h-10 mb-7 ">
                           <div class="custom-variants-option border w-19 flex text-center">
                             <label class="variant-selector-label py-1 px-1" for="displayPetNameTwo">
                               <input
@@ -168,8 +178,8 @@
                 <div>
                   <ul>
                     <li class="w-full flex flex-col">
-                      <h2 class="henrikYolo bg-gray-200 text-center mb-5 h-10 flex items-center justify-center">Typsnitt</h2>
-                      <div class="flex items-center gap-3 h-10 mb-7 magnusYolo">
+                      <h2 class="fontChange bg-gray-200 text-center mb-5 h-10 flex items-center justify-center">Typsnitt</h2>
+                      <div class="fontChangeDropdownContent flex items-center gap-3 h-10 mb-7">
                         {% assign fontChoices = "Arial, Times" | split: ',' %}
                         {% for font in fontChoices %}
                           <div class="custom-variants-option border w-19 flex text-center">
@@ -427,6 +437,21 @@
         });
     }
   }
+ 
+  const createdInputText = document.querySelector('.createText');
+  const createdInputTextDropdownContent = document.querySelector('.createdInputTextDropdownContent');
+
+  createdInputText.addEventListener('click', () => {
+  createdInputTextDropdownContent.classList.toggle('createdInputTextDropdownContent');
+});
+
+  const fontChange = document.querySelector('.fontChange');
+  const fontChangeDropdownContent = document.querySelector('.fontChangeDropdownContent');
+
+  fontChange.addEventListener('click', () => {
+    fontChangeDropdownContent.classList.toggle('fontChangeDropdownContent');
+});
+
 
   const henrikYolo = document.querySelectorAll('.henrikYolo');
   const magnusYolo = document.querySelectorAll('.magnusYolo');

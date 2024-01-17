@@ -1,34 +1,49 @@
+<style>
+  /* Existing styles */
+
+  /* Increase specificity for the #displayPetName input */
+  div ul li .henrikYolo #displayPetName {
+    font-family: Arial,'Times New Roman';
+  }
+
+  /* More existing styles */
+</style> 
+
 {% assign selected_variant = product.selected_or_first_available_variant %}
 
-<div class="max-w-3xl mx-auto my-10 border ">
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-    <div class="product-medias">
-      <div>
-        <div class="carousel h-94" data-current-slide="0" data-total-slides="{{ product.media.size }}">
-            {% for media in product.media %}
-              <div class="carousel-slide" style="display: none;" data-id="{{ media.id }}" data-color="{{ media.alt }}">
-                <div class="h-80 overflow-hidden p-5 relative">
-                  {% comment %} {% render 'product-media', media: media %} {% endcomment %}
-                   <img
-                   class="w-full h-full object-cover customMediaAlt" 
-                   data-option-value="{{ media.alt }}"
-                   data-alt="{{ media.alt }}"
-                   data-media-id="{{ media.id }}"
-                   data-media-url="{{ media.url }}"
-                   src="{{ media | img_url: 'large' }}" 
-                   alt="{{ media.preview_image.alt }}" 
-                   width="100" 
-                   height="100"
-                   loading="lazy"> 
-                   
-                  <div id="imageText-{{ media.id }}" class="absolute top-0 left-0 w-full h-full flex items-center justify-center text-white text-2xl"></div>
-                  {% comment %} <p>{{ media.id }}</p> {% endcomment %}
-                  <p>{{ media.alt }}</p>
-                </div>
-              </div>
-            {% endfor %}
-          <button class="carousel-prev">Prev</button>
-          <button class="carousel-next">Next</button>
+<div class="max-w-3xl mx-auto my-10">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+    {% comment %} PRODUCT IMAGE {% endcomment %}
+    <div class="product-medias my-2 ">
+      <div class="carousel flex flex-col" data-current-slide="0" data-total-slides="{{ product.media.size }}">
+        {% for media in product.media %}
+          <div class="carousel-slide" style="display: none;" data-id="{{ media.id }}" data-color="{{ media.alt }}">
+            <div class="overflow-hidden relative ">
+              <img
+                class="w-full h-full object-cover customMediaAlt"
+                data-option-value="{{ media.alt }}"
+                data-alt="{{ media.alt }}"
+                data-media-id="{{ media.id }}"
+                data-media-url="{{ media.url }}"
+                src="{{ media | img_url: 'large' }}"
+                alt="{{ media.preview_image.alt }}"
+                width="100"
+                height="100"
+                loading="lazy"
+              >
+
+              <div
+                id="imageText-{{ media.id }}"
+                class="absolute top-0 left-0 w-full h-full flex items-center justify-center text-white text-2xl"
+              ></div>
+              {% comment %} <p>{{ media.id }}</p> {% endcomment %}
+              {% comment %} <p>{{ media.alt }}</p> {% endcomment %}
+            </div>
+          </div>
+        {% endfor %}
+        <div class="flex items-center justify-between mt-4">
+          <button class="carousel-prev">{% render 'icon-chevron-left' %}</button>
+          <button class="carousel-next">{% render 'icon-chevron-right' %}</button>
         </div>
       </div>
     </div>
@@ -38,11 +53,11 @@
 
         {% for block in section.blocks %}
           {% case block.type %}
-            {% when 'title' %}
+            {% comment %} {% when 'title' %}
               <div class="my-3">
                 <h1 class="text-3xl text-gray-900">{{ product.title }}</h1>
-              </div>
-            {% when 'price' %}
+              </div> {% endcomment %}
+            {% comment %} {% when 'price' %}
               <div class="my-3" id="price-{{ section.id }}">
                 <span class="text-base text-gray-500 line-through">
                   {{ selected_variant.compare_at_price | money }}
@@ -54,7 +69,7 @@
                 {% if selected_variant.price < selected_variant.compare_at_price %}
                   <span class="px-5 py-1 text-sm font-bold bg-red-500 rounded-full text-white mx-4">Sale</span>
                 {% endif %}
-              </div>
+              </div> {% endcomment %}
 
             {% when 'variant_selector' %}
               <style>
@@ -79,18 +94,17 @@
                 {% for option in product.options_with_values %}
                   <div>
                     <ul>
-                      <li class="w-5/6 flex flex-col">
+                      <li class="w-full flex flex-col">
                         <h2
                           class="henrikYolo bg-gray-200 text-center mb-5 h-10 flex items-center justify-center"
                           for="Option-{{ section.id }}-{{ forloop.index0 }}"
                         >
                           {{ option.name }}
                         </h2>
-                        <div class="flex items-center gap-3 h-10 mb-7 magnusYolo ">
+                        <div class="flex items-center flex-wrap gap-3 mb-6 magnusYolo ">
                           {% for value in option.values %}
                             <div class="custom-variants-option border w-19 flex text-center  ">
-                            <label class="variant-selector-label py-1 px-1" 
-                            >
+                              <label class="variant-selector-label py-1 px-1">
                                 <input
                                   class="variant-selector-class"
                                   type="radio"
@@ -102,7 +116,6 @@
                                 >
                                 {{ value }}
                               </label>
-                           
                             </div>
                           {% endfor %}
                         </div>
@@ -113,20 +126,66 @@
                     {{ product.variants | json }}
                   </script>
                 {% endfor %}
+                
+
+                {% comment %}  {% endcomment %}
+
                 <div>
-                  <p>Välj text</p>
-                  <input class="border w-5/6 text-center" id="displayPetName" type="text" placeholder="namn">
+                  <ul>
+                    <li class="w-full flex flex-col">
+                      <h2 class="henrikYolo bg-gray-200 text-center mb-5 h-10 flex items-center justify-center">Välj text</h2>
+                      <div class="flex items-center justify-center gap-3 h-10 mb-7 magnusYolo">
+                          <div class="custom-variants-option border w-19 flex text-center">
+                            <label class="variant-selector-label py-1 px-1" for="displayPetNameTwo">
+                              <input
+                                id="displayPetNameTwo"
+                                type="radio"
+                                name="displayPetNameTwo"
+                              >
+                              <input 
+                                class="border w-full text-center" 
+                                id="displayPetName" type="text" 
+                                placeholder="Namn"
+                                required
+                                >
+                            </label>
+                          </div>
+                      </div>
+                    </li>
+                  </ul>
                 </div>
 
                 <div>
-                  <p>Välj typsnitt</p>
-                  <input class="border w-5/6 text-center" id="displayPetNameTypsnitt" type="text" placeholder="namn">
+                  <ul>
+                    <li class="w-full flex flex-col">
+                      <h2 class="henrikYolo bg-gray-200 text-center mb-5 h-10 flex items-center justify-center">Typsnitt</h2>
+                      <div class="flex items-center gap-3 h-10 mb-7 magnusYolo">
+                        {% assign fontChoices = "Arial, Times" | split: ',' %}
+                        {% for font in fontChoices %}
+                          <div class="custom-variants-option border w-19 flex text-center">
+                            <label class="variant-selector-label py-1 px-1" for="fontChoice{{ forloop.index }}">
+                              <input
+                                id="fontChoice{{ forloop.index }}"
+                                class="font-choice "
+                                type="radio"
+                                name="Typsnitt"
+                                value="{{ font | strip | handle }}"
+                              >
+                              {{ font }}
+                            </label>
+                          </div>
+                        {% endfor %}
+                      </div>
+                    </li>
+                  </ul>
                 </div>
+                
+                {% comment %}  {% endcomment %}
               </variant-selector>
 
             {% when 'quantity' %}
               <div class="my-3">
-                <label for="Quantity-{{ section.id }}">Quantity</label>
+                <label for="Quantity-{{ section.id }}">Antal:</label>
                 <div class="my-2">
                   <input
                     type="number"
@@ -138,17 +197,14 @@
                   >
                 </div>
               </div>
-            {% when 'description' %}
-              <div class="my-3">
-                <p class="text-gray-700">{{ product.description }}</p>
-              </div>
+           
             {% when 'checkout_buttons' %}
               <div class="my-3">
                 <button
                   type="submit"
                   name="add"
                   id="AddToCart"
-                  class="w-full py-4 px-6 bg-gray-900 text-white hover:bg-gray-700 rounded-sm my-2"
+                  class="border border-black w-full py-4 px-6 bg-customGreen text-white hover:bg-gray-700 rounded-sm my-2"
                   {% if selected_variant.available == false %}
                     disabled
                   {% endif %}
@@ -156,7 +212,7 @@
                   {% if selected_variant.available == false %}
                     Sold Out
                   {% else %}
-                    Add to cart
+                    LÄGG I VARUKORG
                   {% endif %}
                 </button>
               </div>
@@ -164,77 +220,107 @@
 
           {% endcase %}
         {% endfor %}
-      {% endform %}
+      
     </div>
+
+    <div>
+              <div>
+                <p class=" text-2xl text-gray-900">{{ product.title | upcase }}</p>
+              </div> 
+            
+              <div class="my-3" id="price-{{ section.id }}">
+                <span class="text-base text-gray-500 line-through">
+                  {{ selected_variant.compare_at_price | money | upcase }}
+                </span>
+                <span class="text-lg text-gray-900">
+                  {{ selected_variant.price | money | upcase }}
+                </span>
+
+                {% if selected_variant.price < selected_variant.compare_at_price %}
+                  <span class="px-5 py-1 text-sm font-bold bg-red-500 rounded-full text-white mx-4">Sale</span>
+                {% endif %}
+              </div> 
+
+
+
+    <div style="display: flex; flex-wrap: wrap; border-top: 1px solid lightgray;">
+        <div class="my-3">
+          <p class="text-gray-700">{{ product.description }}</p>
+        </div>
+    </div>
+    </div>
+  {% endform %}
   </div>
 </div>
 
 
+{% comment %} SCRIPT  {% endcomment %}
+
 <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const textInput = document.getElementById('displayPetName');
 
-document.addEventListener('DOMContentLoaded', function () {
-  const carousel = document.querySelector('.carousel');
-  const slides = carousel.querySelectorAll('.carousel-slide');
-  const prevButton = carousel.querySelector('.carousel-prev');
-  const nextButton = carousel.querySelector('.carousel-next');
-  let currentSlide = parseInt(carousel.dataset.currentSlide);
-  const totalSlides = parseInt(carousel.dataset.totalSlides);
-  
-  const altTexts = [];
-  function getAllAltText() {
-    
-    slides.forEach((slide) => {
-      const image = slide.querySelector('img');
-      altTexts.push(image.alt);
-    });
-    console.log('All alt texts:', altTexts);
-    return altTexts;
-  }
-  getAllAltText()
-
-  function updateSlides() {
-    slides.forEach((slide, index) => {
-      slide.style.display = index === currentSlide ? 'block' : 'none';
-    });
-
-    const currentImage = slides[currentSlide].querySelector('img');
-    console.log('Slide index:', currentSlide, 'Alt text:', currentImage.alt);
-  }
-
-  document.querySelectorAll('.variant-selector-label').forEach((label) => {
-  label.addEventListener('click', function(event) {
-    if (event.target.name === 'options[Color]') {
-      console.log('event.target.value:' + event.target.value);
-
-      // Find the index of the slide with the matching alt attribute
-      const matchingSlideIndex = altTexts.indexOf(event.target.value);
-      if (matchingSlideIndex !== -1) {
-        currentSlide = matchingSlideIndex;
-        console.log('you clicked on a label with matching color');
-      }
-
-      updateSlides();
+// Get the value from localStorage when the page loads
+    const storedValue = localStorage.getItem('displayPetName');
+      if (storedValue) {
+        textInput.value = storedValue;
     }
-  });
-});
+    const carousel = document.querySelector('.carousel');
+    const slides = carousel.querySelectorAll('.carousel-slide');
+    const prevButton = carousel.querySelector('.carousel-prev');
+    const nextButton = carousel.querySelector('.carousel-next');
+    let currentSlide = parseInt(carousel.dataset.currentSlide);
+    const totalSlides = parseInt(carousel.dataset.totalSlides);
 
-  prevButton.addEventListener('click', function () {
-    currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+    const altTexts = [];
+    function getAllAltText() {
+      slides.forEach((slide) => {
+        const image = slide.querySelector('img');
+        altTexts.push(image.alt);
+      });
+      console.log('All alt texts:', altTexts);
+      return altTexts;
+    }
+    getAllAltText();
+
+    function updateSlides() {
+      slides.forEach((slide, index) => {
+        slide.style.display = index === currentSlide ? 'block' : 'none';
+      });
+
+      const currentImage = slides[currentSlide].querySelector('img');
+      console.log('Slide index:', currentSlide, 'Alt text:', currentImage.alt);
+    }
+
+    document.querySelectorAll('.variant-selector-label').forEach((label) => {
+      label.addEventListener('click', function (event) {
+        if (event.target.name === 'options[Färg]') {
+          console.log('event.target.value:' + event.target.value);
+
+          // Find the index of the slide with the matching alt attribute
+          const matchingSlideIndex = altTexts.indexOf(event.target.value);
+          if (matchingSlideIndex !== -1) {
+            currentSlide = matchingSlideIndex;
+            console.log('you clicked on a label with matching färg');
+          }
+
+          updateSlides();
+        }
+      });
+    });
+
+    prevButton.addEventListener('click', function () {
+      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+      updateSlides();
+    });
+
+    nextButton.addEventListener('click', function () {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      updateSlides();
+    });
+
     updateSlides();
-    console.log('prevButton');
   });
-
-  nextButton.addEventListener('click', function () {
-    currentSlide = (currentSlide + 1) % totalSlides;
-    updateSlides();
-    console.log('nextButton');
-  });
-
-  updateSlides(); // Log the alt text when the page is loaded initially
-});
-
-
-
 
   class VariantSelector extends HTMLElement {
     constructor() {
@@ -332,7 +418,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-
   const henrikYolo = document.querySelectorAll('.henrikYolo');
   const magnusYolo = document.querySelectorAll('.magnusYolo');
 
@@ -343,21 +428,38 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   document.getElementById('displayPetName').addEventListener('input', function (event) {
+
     const text = event.target.value;
-    document.querySelectorAll('[id^="imageText-"]').forEach((imageText) => {
-      imageText.textContent = text;
+    const selectedFont = getSelectedFont();
+    updateImageText(text, selectedFont);
+    localStorage.setItem('displayPetName', text);
+  });
+
+  // New event listener for the font selection
+  document.querySelectorAll('.font-choice').forEach(function (radioButton) {
+    radioButton.addEventListener('change', function () {
+      const text = document.getElementById('displayPetName').value;
+      const selectedFont = getSelectedFont();
+      updateImageText(text, selectedFont);
     });
   });
 
+  // Function to get the selected font
+  function getSelectedFont() {
+    const selectedRadioButton = document.querySelector('input[name="Typsnitt"]:checked');
+    return selectedRadioButton ? selectedRadioButton.value : 'Arial';
+  }
+
+  // Function to update text inside images
+  function updateImageText(text, font = 'Arial') {
+    document.querySelectorAll('[id^="imageText-"]').forEach(function (imageText) {
+      imageText.textContent = text;
+      imageText.style.fontFamily = font;
+    });
+  }
+
   customElements.define('variant-selector', VariantSelector);
-
- 
-
-
-
-
 </script>
-
 
 {% schema %}
 {

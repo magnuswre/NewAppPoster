@@ -5,7 +5,9 @@
   div ul li .henrikYolo #displayPetName {
     font-family: Arial,'Times New Roman';
   }
-
+  .rotate-90 {
+                 transform: rotate(90deg);
+               }
   /* More existing styles */
 </style> 
 
@@ -88,6 +90,8 @@
                 .magnusYolo {
                   display: none;
                 }
+
+             
               </style>
 
               <variant-selector data-url="{{ product.url }}" data-section="{{ section.id }}">
@@ -95,12 +99,18 @@
                   <div>
                     <ul>
                       <li class="w-full flex flex-col">
+                      <div class="henrikYolo bg-gray-200 grid grid-cols-3 mb-5 h-10 items-center ">
+                        <div></div>
                         <h2
-                          class="henrikYolo bg-gray-200 text-center mb-5 h-10 flex items-center justify-center"
+                          class="text-center"
                           for="Option-{{ section.id }}-{{ forloop.index0 }}"
                         >
                           {{ option.name }}
                         </h2>
+                        <div class="flex justify-end items-center">
+                          <span class="chevron text-gray-400 mr-2">{% render 'icon-chevron-input' %}</span>
+                        </div>
+                        </div>
                         <div class="flex items-center flex-wrap gap-3 mb-6 magnusYolo ">
                           {% for value in option.values %}
                             <div class="custom-variants-option border w-19 flex text-center  ">
@@ -420,9 +430,11 @@
 
   const henrikYolo = document.querySelectorAll('.henrikYolo');
   const magnusYolo = document.querySelectorAll('.magnusYolo');
-
+  
   henrikYolo.forEach((henrik) => {
+    const chevron = henrik.querySelector('.chevron');
     henrik.addEventListener('click', () => {
+      chevron.classList.toggle('rotate-90');
       henrik.nextElementSibling.classList.toggle('magnusYolo');
     });
   });
@@ -434,6 +446,8 @@
     updateImageText(text, selectedFont);
     localStorage.setItem('displayPetName', text);
   });
+
+  
 
   // New event listener for the font selection
   document.querySelectorAll('.font-choice').forEach(function (radioButton) {

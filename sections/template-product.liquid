@@ -1,14 +1,10 @@
  <style>
-  /* Existing styles */
-
-  /* Increase specificity for the #displayPetName input */
   div ul li .henrikYolo #displayPetName {
     font-family: Arial,'Times New Roman';
   }
   .rotate-90 {
     transform: rotate(90deg);
   }
-  /* More existing styles */
 </style> 
 
 {% assign selected_variant = product.selected_or_first_available_variant %}
@@ -38,7 +34,6 @@
                 id="imageText-{{ media.id }}"
                 class="absolute top-0 left-0 w-full h-full flex items-center justify-center text-white text-2xl"
               ></div>
-              {% comment %} <p>{{ media.id }}</p> {% endcomment %}
               {% comment %} <p>{{ media.alt }}</p> {% endcomment %}
             </div>
           </div>
@@ -55,24 +50,6 @@
 
         {% for block in section.blocks %}
           {% case block.type %}
-            {% comment %} {% when 'title' %}
-              <div class="my-3">
-                <h1 class="text-3xl text-gray-900">{{ product.title }}</h1>
-              </div> {% endcomment %}
-            {% comment %} {% when 'price' %}
-              <div class="my-3" id="price-{{ section.id }}">
-                <span class="text-base text-gray-500 line-through">
-                  {{ selected_variant.compare_at_price | money }}
-                </span>
-                <span class="text-lg text-gray-900">
-                  {{ selected_variant.price | money }}
-                </span>
-
-                {% if selected_variant.price < selected_variant.compare_at_price %}
-                  <span class="px-5 py-1 text-sm font-bold bg-red-500 rounded-full text-white mx-4">Sale</span>
-                {% endif %}
-              </div> {% endcomment %}
-
             {% when 'variant_selector' %}
               <style>
                 input[type='radio'] {
@@ -91,17 +68,10 @@
                   display: none;
                 }
 
-                /* .createdInputTextDropdownContent{
-                  display: none;
-                } */
-
                 .fontChangeDropdownContent{
                   display: none;
                 }
 
-              
-
-             
               </style>
 
               <variant-selector data-url="{{ product.url }}" data-section="{{ section.id }}">
@@ -121,6 +91,8 @@
                                 class="border w-full text-center" 
                                 id="displayPetName" type="text" 
                                 placeholder= "ex. Pluto"
+                                maxlength="10"
+                                
                                 required
                                 >
                             </label>
@@ -151,8 +123,9 @@
                                 class="border w-full text-center" 
                                 id="displayPetName" type="number" 
                                 placeholder="ex. 0701234567"
-                                required
-                                >
+                               
+                              >
+                                
                             </label>
                           </div>
                       </div>
@@ -194,10 +167,6 @@
               
               
               {% for option in product.options_with_values %}
-                  
-  
-
-
                   <div>
                     <ul>
                       <li class="w-full flex flex-col">
@@ -238,13 +207,6 @@
                     {{ product.variants | json }}
                   </script>
                 {% endfor %}
-                
-
-                {% comment %}  {% endcomment %}
-
-                
-                
-                {% comment %}  {% endcomment %}
               </variant-selector>
 
             {% when 'quantity' %}
@@ -281,10 +243,8 @@
                 </button>
               </div>
             {% else %}
-
           {% endcase %}
         {% endfor %}
-      
     </div>
 
     <div>
@@ -407,18 +367,14 @@
     }
     onVariantChange(event) {
       console.log('Variant changed:', event.target.value);
-      // console.log('Alt text:', event.target.dataset.alt);
-      // Get the clicked option and its category
       const clickedOption = event.target.closest('.variant-selector-label');
       const category = clickedOption.closest('ul');
 
-      // Remove the 'selected' class from the previously selected option in the same category
       const previouslySelectedOption = category.querySelector('.variant-selector-label.selected');
       if (previouslySelectedOption) {
         previouslySelectedOption.classList.remove('selected');
       }
 
-      // Add the 'selected' class to the clicked option
       if (clickedOption) {
         clickedOption.classList.add('selected');
       }
@@ -455,7 +411,6 @@
         if (findings) return variant;
       });
 
-      // console.log('this.currentVariant:', this.currentVariant);
     }
     updateURL() {
       if (!this.currentVariant) return;
@@ -498,7 +453,6 @@ fontChange.addEventListener('click', () => {
   fontChangeDropdownContent.classList.toggle('fontChangeDropdownContent');
 });
 
-
   const henrikYolo = document.querySelectorAll('.henrikYolo');
   const magnusYolo = document.querySelectorAll('.magnusYolo');
   
@@ -511,14 +465,11 @@ fontChange.addEventListener('click', () => {
   });
 
   document.getElementById('displayPetName').addEventListener('input', function (event) {
-
     const text = event.target.value;
     const selectedFont = getSelectedFont();
     updateImageText(text, selectedFont);
     localStorage.setItem('displayPetName', text);
   });
-
-  
 
   // New event listener for the font selection
   document.querySelectorAll('.font-choice').forEach(function (radioButton) {

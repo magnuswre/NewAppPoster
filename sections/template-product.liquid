@@ -25,12 +25,40 @@
   }
 </style>
 
-
+   {% comment %} {% render {{ 'images.product_id' }} %} {% endcomment %}
+      {% comment %} <p>image.size {{ image.size }} </p> {% endcomment %}
+      {% comment %} <p>image.product_id:  {{ image.product_id }}</p> {% endcomment %}
+    
+      {% comment %} <p>image.variants:  {{ image.variants }}</p> {% endcomment %}
+      {% comment %} <p>image.alt:  {{ image.alt }}</p> {% endcomment %}
+      {% comment %} <p>image.src:  {{ image.src }}</p> {% endcomment %}
+      {% comment %} <p>image.width:  {{ image.width }}</p> {% endcomment %}
+      {% comment %} <p>image.height:  {{ image.height }}</p> {% endcomment %}
+      {% comment %} <p>image.position:  {{ image.position }}</p> {% endcomment %}
+      {% comment %} <p>image.url: {{ image. }} </p> {% endcomment %}
 {% assign selected_variant = product.selected_or_first_available_variant %}
 
 <div class="max-w-5xl mx-auto my-10">
   <div class="m-3 md:m-3 grid grid-cols-1 md:grid-cols-3 gap-3">
     {% comment %} PRODUCT IMAGE {% endcomment %}
+    <div>
+      {% for image in product.images %}
+        <img 
+        src="{{ image | img_url: 'large' }}" 
+        alt=""
+        width="200"
+        height="200"
+        loading="lazy"
+        >
+        <p>Product id: {{ product.id }} </p>
+        <p>Image.id:  {{ image.id }}</p>
+        <p>Attached to variant?: {{ image.attached_to_variant? }} </p>
+        <br>
+      {% endfor %}
+    </div>
+
+
+    
     <div class="product-medias my-2 ">
       <div class="carousel flex flex-col" data-current-slide="0" data-total-slides="{{ product.media.size }}">
         {% for media in product.media %}
@@ -39,8 +67,8 @@
               <img
                 class="w-full h-full object-cover customMediaAlt"
                 data-option-value="{{ media.alt }}"
-                data-alt="{{ media.alt }}"
-                data-media-id="{{ media.id }}"
+                data-alt=" { media.alt }}"
+                data-media-id=" {{ media.id }}"
                 data-media-url="{{ media.url }}"
                 src="{{ media | img_url: 'large' }}"
                 alt="{{ media.preview_image.alt }}"
@@ -53,22 +81,40 @@
               class="absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-end justify-center text-white text-2xl"
             ></div>
               {% comment %} <p>{{ media.alt }}</p> {% endcomment %}
-            </div>
-          </div>
-        {% endfor %}
-        <div class="flex items-center justify-between mt-4">
-          <button class="carousel-prev">{% render 'icon-chevron-left' %}</button>
-          <button class="carousel-next">{% render 'icon-chevron-right' %}</button>
-        </div>
+              <p>Media id: {{ media.id }}</p>
+              <p>Media alt: {{ media.alt }}</p>
+              </div>
+              </div>
+            {% endfor %}
+            <div class="flex items-center justify-between mt-4">
+              <button class="carousel-prev">{% render 'icon-chevron-left' %}</button>
+              <button class="carousel-next">{% render 'icon-chevron-right' %}</button>
+              </div>
+              
+              {% for variant in product.variants %}
+                <p>Variant title: {{ variant.title }} </p>
+                <p>Variant id: {{ variant.id }}</p>
+                {% comment %} <p> {{ variant.price | money }}  </p> {% endcomment %}
+                <p>Product id: {{ product.id }} </p>
+                <p>Product title: {{ product.title }} </p>
+                {% comment %} <p> {{ product.image.id }}</p> {% endcomment %}
+                <br>
+                {% comment %} <p>{{ variant.featured_image }}</p> {% endcomment %}
+                {% comment %} <img src="{{ variant | image_url }}" alt=""
+                width="100"
+                height="100"
+                loading="lazy"
+                > {% endcomment %}
+                
+              {% endfor %}
+
+
       </div>
     </div>
+    
     <div class="product--information top-5 p-2 ">
       {% form 'product', product, id: 'product-form', novalidate: 'novalidate' %}
         <input type="hidden" name="id" value="{{ selected_variant.id }}">
-
-        {% for block in section.blocks %}
-          {% case block.type %}
-            {% when 'variant_selector' %}
               <variant-selector data-url="{{ product.url }}" data-section="{{ section.id }}">
                 <div>
                   <ul>
@@ -125,39 +171,6 @@
                   </ul>
                 </div>
 
-
-                <div>
-                  <ul>
-                    <li class="w-full flex flex-col">
-                      <div class="fontChange bg-gray-200 grid grid-cols-3 mb-5 h-10 items-center">
-                        <div></div>
-                        <h2 class="text-center">Typsnitt</h2>
-                        <div class="flex justify-end items-center">
-                        <span class="chevron text-gray-400 mr-2">{% render 'icon-chevron-input' %}</span>
-                      </div>
-                      </div>
-                      <div class="fontChangeDropdownContent flex items-center gap-3 h-10 mb-7">
-                        {% assign fontChoices = "Arial, Times" | split: ',' %}
-                        {% for font in fontChoices %}
-                          <div class="custom-variants-option border w-19 flex text-center">
-                            <label class="variant-selector-label py-1 px-1" for="fontChoice{{ forloop.index }}">
-                              <input
-                                id="fontChoice{{ forloop.index }}"
-                                class="font-choice "
-                                type="radio"
-                                name="Typsnitt"
-                                value="{{ font | strip | handle }}"
-                              >
-                              {{ font }}
-                            </label>
-                          </div>
-                        {% endfor %}
-                      </div>
-                    </li>
-                  </ul>
-                </div>  
-              
-              
               {% for option in product.options_with_values %}
                   <div>
                     <ul>
@@ -201,7 +214,6 @@
                 {% endfor %}
               </variant-selector>
 
-                
               <div class="my-2 mb-5">
                 <div class="hidden">
                 <input type="checkbox" id="one" name="quantity" value="1" checked>
@@ -220,8 +232,6 @@
                 </div>
               </div>
            
-              
-              {% when 'checkout_buttons' %} 
               <div class="my-3">
                 <button
                   type="submit"
@@ -239,35 +249,7 @@
                   {% endif %}
                 </button>
               </div>
-            {% else %}
-          {% endcase %}
-        {% endfor %}
-    </div>
-
-{% comment %} PRODUCT TITLE, PRICE AND DESCRIPTION {% endcomment %}
-            <div>
-              <div>
-                <p class=" text-2xl text-gray-900">{{ product.title | upcase }}</p>
-              </div> 
-            
-              <div class="my-3" id="price-{{ section.id }}">
-                <span class="text-base text-gray-500 line-through">
-                  {{ selected_variant.compare_at_price | money | upcase }}
-                </span>
-                <span class="text-lg text-gray-900">
-                  {{ selected_variant.price | money | upcase }}
-                </span>
-
-                {% if selected_variant.price < selected_variant.compare_at_price %}
-                  <span class="px-5 py-1 text-sm font-bold bg-red-500 rounded-full text-white mx-4">Sale</span>
-                {% endif %}
-              </div> 
-             <div style="display: flex; flex-wrap: wrap; border-top: 1px solid lightgray;">
-        <div class="my-3">
-          <p class="text-gray-700">{{ product.description }}</p>
-        </div>
-    </div>
-    </div>
+         </div>
   {% endform %}
   </div>
 </div>
@@ -276,15 +258,20 @@
 {% comment %} SCRIPT  {% endcomment %}
 
 <script>
+
   document.addEventListener('DOMContentLoaded', function () {
+    
+    
+    // Input där man skriver in telefonnummer till djuret
     const textInput = document.getElementById('displayPetName');
-
-
-// Get the value from localStorage when the page loads
+    
+    // Hämta värdet som är sparad i local storage
     const storedValue = localStorage.getItem('displayPetName');
       if (storedValue) {
         textInput.value = storedValue;
     }
+
+    // Bildkarusellen/Slide
     const carousel = document.querySelector('.carousel');
     const slides = carousel.querySelectorAll('.carousel-slide');
     const prevButton = carousel.querySelector('.carousel-prev');
@@ -292,10 +279,15 @@
     let currentSlide = parseInt(carousel.dataset.currentSlide);
     const totalSlides = parseInt(carousel.dataset.totalSlides);
 
+    
+    
     const altTexts = [];
+
+    // Hämtar alla alt. texter från bilderna och lägger in dem i altTexts = [].
     function getAllAltText() {
-      slides.forEach((slide) => {
+      slides.forEach((slide) => { 
         const image = slide.querySelector('img');
+    
         altTexts.push(image.alt);
       });
       console.log('All alt texts:', altTexts);
@@ -303,21 +295,30 @@
     }
     getAllAltText();
 
+
+    // Uppdatera slides
+    // Bilden visas om indexet på bilden är samma som indexet på alt. texten
     function updateSlides() {
       slides.forEach((slide, index) => {
         slide.style.display = index === currentSlide ? 'block' : 'none';
       });
 
+     //  Hämtar den aktuella bilden (currentImage) från den aktuella bilden som visas i bildkarusellen/Slide (slides[currentSlide])
       const currentImage = slides[currentSlide].querySelector('img');
+      // Skriver ut information om den aktuella bilden och dess alternativtext (alt.) till konsolen.
       console.log('Slide index:', currentSlide, 'Alt text:', currentImage.alt);
     }
 
+    // Väljer alla HTML-element med klassen .variant-selector-label.
     document.querySelectorAll('.variant-selector-label').forEach((label) => {
+      // Lägger till en eventlyssnare på varje element med klassen .variant-selector-label.
       label.addEventListener('click', function (event) {
+      // Om det element som klickas på har namnet 'options[Färg]' så körs koden nedan.
         if (event.target.name === 'options[Färg]') {
+          // Skriver ut värdet på det element som klickats på till konsolen.
           console.log('event.target.value:' + event.target.value);
-
-          // Find the index of the slide with the matching alt attribute
+          
+          // Hämtar indexet på den alt. text som matchar det värde som klickats på.
           const matchingSlideIndex = altTexts.indexOf(event.target.value);
           if (matchingSlideIndex !== -1) {
             currentSlide = matchingSlideIndex;
@@ -440,14 +441,14 @@
 //   createdInputTextDropdownContent.classList.toggle('createdInputTextDropdownContent');
 // });
 
-const fontChange = document.querySelector('.fontChange');
-const fontChangeDropdownContent = document.querySelector('.fontChangeDropdownContent');
-const chevron = fontChange.querySelector('.chevron');
+// const fontChange = document.querySelector('.fontChange');
+// const fontChangeDropdownContent = document.querySelector('.fontChangeDropdownContent');
+// const chevron = fontChange.querySelector('.chevron');
 
-fontChange.addEventListener('click', () => {
-  chevron.classList.toggle('rotate-90');
-  fontChangeDropdownContent.classList.toggle('fontChangeDropdownContent');
-});
+// fontChange.addEventListener('click', () => {
+//   chevron.classList.toggle('rotate-90');
+//   fontChangeDropdownContent.classList.toggle('fontChangeDropdownContent');
+// });
 
   const henrikYolo = document.querySelectorAll('.henrikYolo');
   const magnusYolo = document.querySelectorAll('.magnusYolo');
@@ -495,43 +496,6 @@ fontChange.addEventListener('click', () => {
 
 {% schema %}
 {
-  "name": "Product",
-  "blocks": [
-    {
-      "type": "vendor",
-      "name": "Vendor",
-      "limit": 1
-    },
-    {
-      "type": "title",
-      "name": "Title",
-      "limit": 1
-    },
-    {
-      "type": "price",
-      "name": "Price",
-      "limit": 1
-    },
-    {
-      "type": "variant_selector",
-      "name": "Variant Selector",
-      "limit": 1
-    },
-    {
-      "type": "quantity",
-      "name": "Quantity",
-      "limit": 1
-    },
-    {
-      "type": "description",
-      "name": "Description",
-      "limit": 1
-    },
-    {
-      "type": "checkout_buttons",
-      "name": "Checkout Buttons",
-      "limit": 1
-    }
-  ]
+  "name": "Product"
 }
 {% endschema %}

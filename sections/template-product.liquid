@@ -81,35 +81,13 @@
               class="absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-end justify-center text-white text-2xl"
             ></div>
               {% comment %} <p>{{ media.alt }}</p> {% endcomment %}
-              <p>Media id: {{ media.id }}</p>
-              <p>Media alt: {{ media.alt }}</p>
-              <p> {{ media.media_type }}</p>
-              </div>
-              </div>
-            {% endfor %}
-            <div class="flex items-center justify-between mt-4">
-              <button class="carousel-prev">{% render 'icon-chevron-left' %}</button>
-              <button class="carousel-next">{% render 'icon-chevron-right' %}</button>
-              </div>
-              
-              {% for variant in product.variants %}
-                <p>Variant title: {{ variant.title }} </p>
-                <p>Variant id: {{ variant.id }}</p>
-                {% comment %} <p> {{ variant.price | money }}  </p> {% endcomment %}
-                <p>Product id: {{ product.id }} </p>
-                <p>Product title: {{ product.title }} </p>
-                {% comment %} <p> {{ product.image.id }}</p> {% endcomment %}
-                <br>
-                {% comment %} <p>{{ variant.featured_image }}</p> {% endcomment %}
-                {% comment %} <img src="{{ variant | image_url }}" alt=""
-                width="100"
-                height="100"
-                loading="lazy"
-                > {% endcomment %}
-                
-              {% endfor %}
-
-
+            </div>
+          </div>
+        {% endfor %}
+        <div class="flex items-center justify-between mt-4">
+          <button class="carousel-prev">{% render 'icon-chevron-left' %}</button>
+          <button class="carousel-next">{% render 'icon-chevron-right' %}</button>
+        </div>
       </div>
     </div>
     

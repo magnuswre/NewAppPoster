@@ -1,5 +1,7 @@
+<script src="{{ 'product-model.js' | asset_url }}" defer></script>
+
 <style>
-  div ul li .henrikYolo #displayPetName {
+  div ul li .optionLabel #displayPetName {
     font-family: Arial,'Times New Roman';
   }
   .rotate-90 {
@@ -14,7 +16,7 @@
   .variant-selector-label.selected {
     border: 1px solid black;
   }
- .magnusYolo {
+ .optionValuesToggle {
     display: none;
   }
   .fontChangeDropdownContent{
@@ -25,72 +27,72 @@
   }
 </style>
 
-   {% comment %} {% render {{ 'images.product_id' }} %} {% endcomment %}
-      {% comment %} <p>image.size {{ image.size }} </p> {% endcomment %}
-      {% comment %} <p>image.product_id:  {{ image.product_id }}</p> {% endcomment %}
-    
-      {% comment %} <p>image.variants:  {{ image.variants }}</p> {% endcomment %}
-      {% comment %} <p>image.alt:  {{ image.alt }}</p> {% endcomment %}
-      {% comment %} <p>image.src:  {{ image.src }}</p> {% endcomment %}
-      {% comment %} <p>image.width:  {{ image.width }}</p> {% endcomment %}
-      {% comment %} <p>image.height:  {{ image.height }}</p> {% endcomment %}
-      {% comment %} <p>image.position:  {{ image.position }}</p> {% endcomment %}
-      {% comment %} <p>image.url: {{ image. }} </p> {% endcomment %}
+ 
 {% assign selected_variant = product.selected_or_first_available_variant %}
+
+ <div x-data="{ productModalOpen: false }"> 
 
 <div class="max-w-5xl mx-auto my-10">
   <div class="m-3 md:m-3 grid grid-cols-1 md:grid-cols-3 gap-3">
-    {% comment %} PRODUCT IMAGE {% endcomment %}
-    <div>
-      {% for image in product.images %}
-        <img 
-        src="{{ image | img_url: 'large' }}" 
-        alt=""
-        width="200"
-        height="200"
-        loading="lazy"
-        >
-        <p>Product id: {{ product.id }} </p>
-        <p>Image.id:  {{ image.id }}</p>
-        <p>Attached to variant?: {{ image.attached_to_variant? }} </p>
-        <br>
-      {% endfor %}
-    </div>
-
-
-    
-    <div class="product-medias my-2 ">
-      <div class="carousel flex flex-col" data-current-slide="0" data-total-slides="{{ product.media.size }}">
+    <div class="product-medias my-2">
+     <div class="carousel flex flex-col" data-current-slide="0" data-total-slides="{{ product.media.size }}">
         {% for media in product.media %}
-          <div class="carousel-slide" style="display: none;" data-id="{{ media.id }}" data-color="{{ media.alt }}">
-            <div class="overflow-hidden relative ">
-              <img
-                class="w-full h-full object-cover customMediaAlt"
-                data-option-value="{{ media.alt }}"
-                data-alt=" { media.alt }}"
-                data-media-id=" {{ media.id }}"
-                data-media-url="{{ media.url }}"
-                src="{{ media | img_url: 'large' }}"
-                alt="{{ media.preview_image.alt }}"
-                width="100"
-                height="100"
-                loading="lazy"
-              >
-              <div
-              id="imageText-{{ media.id }}"
-              class="absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-end justify-center text-white text-2xl"
-            ></div>
-              {% comment %} <p>{{ media.alt }}</p> {% endcomment %}
-            </div>
-          </div>
+            {% case media.media_type %}
+                {% when 'image' %}
+                    <div class="carousel-slide" style="display: none;" data-id="{{ media.id }}" data-color="{{ media.alt }}">
+                        <div class="overflow-hidden relative">
+                            <!-- Your existing image code for 'image' type -->
+                            <img
+                                class="w-full h-full object-cover customMediaAlt"
+                                data-option-value="{{ media.alt }}"
+                                data-alt="{{ media.alt }}"
+                                data-media-id="{{ media.id }}"
+                                data-media-url="{{ media.url }}"
+                                src="{{ media | img_url: 'large' }}"
+                                alt="{{ media.preview_image.alt }}"
+                                width="100"
+                                height="100"
+                                loading="lazy"
+                            >
+                            <div
+                                id="imageText-{{ media.id }}"
+                                class="absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-end justify-center text-white text-2xl"
+                            ></div>
+                        </div>
+                    </div>
+                {% when 'model' %}
+                    <div class="carousel-slide" style="display: none;" data-id="{{ media.id }}" data-color="{{ media.alt }}">
+                        <product-model data-media-id="{{ media.id }}">
+                            <div>
+                                <button id="productModelOpenButton_{{ media.id }}" x-on:click="productModalOpen = true" class="w-full h-full bg-gray-100 border relative">
+                                    <span class="border bg-gray-100 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                    {% render 'icon-model-viewer' %}</span>
+                                    <img
+                                        src="{{ media | img_url: 'large' }}"
+                                        alt="{{ media.preview_image.alt }}"
+                                        class="w-full h-full object-cover"
+                                        height="100"
+                                        width="100"
+                                        loading="lazy"
+                                    >
+                                </button>
+                            </div>
+                            <template>
+                               {{ media | model_viewer_tag: reveal: 'interaction' }}
+                            </template>
+                        </product-model>
+                    </div>
+                {% else %}
+                    <!-- Handle other media types if needed -->
+            {% endcase %}
         {% endfor %}
         <div class="flex items-center justify-between mt-4">
-          <button class="carousel-prev">{% render 'icon-chevron-left' %}</button>
-          <button class="carousel-next">{% render 'icon-chevron-right' %}</button>
+            <button class="carousel-prev">{% render 'icon-chevron-left' %}</button>
+            <button class="carousel-next">{% render 'icon-chevron-right' %}</button>
         </div>
-      </div>
     </div>
-    
+</div>
+
     <div class="product--information top-5 p-2 ">
       {% form 'product', product, id: 'product-form', novalidate: 'novalidate' %}
         <input type="hidden" name="id" value="{{ selected_variant.id }}">
@@ -154,7 +156,7 @@
                   <div>
                     <ul>
                       <li class="w-full flex flex-col">
-                      <div class="henrikYolo bg-gray-200 grid grid-cols-3 mb-5 h-10 items-center ">
+                      <div class="optionLabel bg-gray-200 grid grid-cols-3 mb-5 h-10 items-center ">
                         <div></div>
                         <h2
                           class="text-center"
@@ -166,7 +168,7 @@
                           <span class="chevron text-gray-400 mr-2">{% render 'icon-chevron-input' %}</span>
                         </div>
                         </div>
-                        <div class="flex items-center flex-wrap gap-3 mb-6 magnusYolo ">
+                        <div class="flex items-center flex-wrap gap-3 mb-6 optionValuesToggle ">
                           {% for value in option.values %}
                             <div class="custom-variants-option border w-19 flex text-center  ">
                               <label class="variant-selector-label py-1 px-1">
@@ -193,6 +195,8 @@
                 {% endfor %}
               </variant-selector>
 
+
+              {% comment %} ADD 3 pay for 2 {% endcomment %}
               <div class="my-2 mb-5">
                 <div class="hidden">
                 <input type="checkbox" id="one" name="quantity" value="1" checked>
@@ -229,12 +233,45 @@
                 </button>
               </div>
          </div>
-  {% endform %}
-  </div>
-</div>
+      {% endform %}
+      </div>
+   </div>
 
+
+  <style>
+     .media model-viewer{
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+     }
+  </style> 
+
+<div id="productModelModal">
+    <div x-show="productModalOpen" class="w-full h-full z-50 items-center fixed inset-0">
+        <div class="relative w-full h-full bg-white">
+            <div class="relative">
+                <div class="flex justify-between items-start p-5 border-b">
+                    <h2 class="text-xl font-bold text-gray-700">3D Model Preview</h2>
+                    <button x-on:click="productModalOpen = false" class="text-gray-400 bg-transparent hover:text-gray-700 rounded text-sm p-2 ml-auto inline-flex items-center">
+                        {% render 'icon-close' %}
+                    </button>
+                </div>
+
+                <div id="body" class="media block relative" style="padding-top: min(calc(100vh - 5rem), 100%)">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+
+ </div> 
 
 {% comment %} SCRIPT  {% endcomment %}
+
 
 <script>
 
@@ -258,6 +295,7 @@
     let currentSlide = parseInt(carousel.dataset.currentSlide);
     const totalSlides = parseInt(carousel.dataset.totalSlides);
 
+    
     
     
     const altTexts = [];
@@ -299,9 +337,10 @@
           
           // Hämtar indexet på den alt. text som matchar det värde som klickats på.
           const matchingSlideIndex = altTexts.indexOf(event.target.value);
+          // Om det finns en matchning så sätts den aktuella bilden till att vara den bilden som matchar.
           if (matchingSlideIndex !== -1) {
             currentSlide = matchingSlideIndex;
-            console.log('you clicked on a label with matching färg');
+            console.log('you clicked on a label with matching "färg"');
           }
 
           updateSlides();
@@ -309,22 +348,30 @@
       });
     });
 
+    // Lägger till en eventlyssnare på knappen med klassen .carousel-prev.
     prevButton.addEventListener('click', function () {
-      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+    // Om det finns fler bilder att visa så minskar indexet med 1, annars sätts indexet till 0.  
+    currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
       updateSlides();
     });
 
+
+    // Lägger till en eventlyssnare på knappen med klassen .carousel-next.
     nextButton.addEventListener('click', function () {
+      // Om det finns fler bilder att visa så ökar indexet med 1, annars sätts indexet till 0.
       currentSlide = (currentSlide + 1) % totalSlides;
       updateSlides();
     });
-
+   
+    // Uppdaterar bilderna
     updateSlides();
   });
 
+  
   class VariantSelector extends HTMLElement {
     constructor() {
       super();
+    
       this.setInitialSelectedOptions();
       const radioButtons = this.querySelectorAll('.variant-selector-class');
       radioButtons.forEach((radioButton) => {
@@ -429,14 +476,14 @@
 //   fontChangeDropdownContent.classList.toggle('fontChangeDropdownContent');
 // });
 
-  const henrikYolo = document.querySelectorAll('.henrikYolo');
-  const magnusYolo = document.querySelectorAll('.magnusYolo');
+  const optionLabel = document.querySelectorAll('.optionLabel');
+  const optionValuesToggle = document.querySelectorAll('.optionValuesToggle');
   
-  henrikYolo.forEach((henrik) => {
+  optionLabel.forEach((henrik) => {
     const chevron = henrik.querySelector('.chevron');
     henrik.addEventListener('click', () => {
       chevron.classList.toggle('rotate-90');
-      henrik.nextElementSibling.classList.toggle('magnusYolo');
+      henrik.nextElementSibling.classList.toggle('optionValuesToggle');
     });
   });
 
@@ -478,3 +525,34 @@
   "name": "Product"
 }
 {% endschema %}
+
+
+
+{% comment %} PRODUCT IMAGE {% endcomment %}
+    {% comment %} <div>
+      {% for image in product.images %}
+        <img 
+        src="{{ image | img_url: 'large' }}" 
+        alt=""
+        width="200"
+        height="200"
+        loading="lazy"
+        >
+        <p>Product id: {{ product.id }} </p>
+        <p>Image.id:  {{ image.id }}</p>
+        <p>Attached to variant?: {{ image.attached_to_variant? }} </p>
+        <br>
+      {% endfor %}
+    </div> {% endcomment %}
+
+      {% comment %} {% render {{ 'images.product_id' }} %} {% endcomment %}
+      {% comment %} <p>image.size {{ image.size }} </p> {% endcomment %}
+      {% comment %} <p>image.product_id:  {{ image.product_id }}</p> {% endcomment %}
+    
+      {% comment %} <p>image.variants:  {{ image.variants }}</p> {% endcomment %}
+      {% comment %} <p>image.alt:  {{ image.alt }}</p> {% endcomment %}
+      {% comment %} <p>image.src:  {{ image.src }}</p> {% endcomment %}
+      {% comment %} <p>image.width:  {{ image.width }}</p> {% endcomment %}
+      {% comment %} <p>image.height:  {{ image.height }}</p> {% endcomment %}
+      {% comment %} <p>image.position:  {{ image.position }}</p> {% endcomment %}
+      {% comment %} <p>image.url: {{ image. }} </p> {% endcomment %}

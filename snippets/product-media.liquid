@@ -1,27 +1,40 @@
 {% case media.media_type %}
-    {% when 'image' %}
-        <img src="{{ media | img_url: 'large' }}" alt="{{ media.preview_image.alt }}" class="w-full h-full object-cover"> 
+  {% when 'image' %}
+    <img
+      src="{{ media | img_url: 'large' }}"
+      alt="{{ media.preview_image.alt }}"
+      class="w-full h-full object-cover"
+    >
 
-        {% when 'external_video' %}
-            {{ media | external_video_tag: class: 'w-full h-80 object-cover' }}
+  {% when 'external_video' %}
+    {{ media | external_video_tag: class: 'w-full h-80 object-cover' }}
 
-        {% when 'video' %}
-            {{ media | video_tag: controls: true, class: 'w-full h-full object-cover' }}
+  {% when 'video' %}
+    {{ media | video_tag: controls: true, class: 'w-full h-full object-cover' }}
 
-        {% when 'model' %}
-            {% comment %} {{ media | model_viewer_tag: class: 'w-full h-full object-cover' }}   {% endcomment %}
-           <product-model>
-            <div>
-                <button class="w-full h-full bg-gray-100 border relative">
-                    <img 
-                       src="{{ media |  image_url: 'large' }}" 
-                       alt="{{ media.preview_image.alt }}"
-                       class="w-full h-full object-cover"
-                       >
-                </button>
-            </div>
-           </product-model>
-        {% else %}
-            {{ media | media_tag }}
-        
+  {% when 'model' %}
+    <product-model>
+      <div>
+        {% comment %} {{ media | model_viewer_tag: class: 'w-full h-full object-cover' }}   {% endcomment %}
+        <button class="w-full h-full bg-gray-100 border relative">
+          <span
+            class="border bg-gray-100 absolute top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2"
+          ></span>
+          {% render 'icon.model.viewer' %}
+          <img
+            src="{{ media | img_url: 'large' }}"
+            alt="{{ media.preview_image.alt }}"
+            class="w-full h-full object-cover"
+            height="100"
+            width="100"
+            loading="lazy"
+          >
+        </button>
+      </div>
+      <template>
+        {{ media | model_viewer_tag: reveal: 'interaction' class: 'w-full h-full object-cover' }}
+      </template>
+    </product-model>
+  {% else %}
+    {{ media | media_tag }}
 {% endcase %}
